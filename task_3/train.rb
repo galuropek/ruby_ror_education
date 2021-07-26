@@ -1,6 +1,6 @@
 class Train
-  attr_accessor :speed, :current_station
-  attr_reader :railway_carriage_count
+  attr_accessor :speed
+  attr_reader :railway_carriage_count, :current_station
 
   EXPECTED_TYPES = %w[freight passenger]
 
