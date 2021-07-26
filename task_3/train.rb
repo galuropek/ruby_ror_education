@@ -32,11 +32,11 @@ class Train
   end
 
   def move_to_next_station
-    @current_station = next_station || @current_station # set current_station if current_station is a last element in the array
+    @current_station = next_station if next_station
   end
 
   def move_to_prev_station
-    @current_station = prev_station
+    @current_station = prev_station if prev_station
   end
 
   def next_station
