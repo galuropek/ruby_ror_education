@@ -1,5 +1,5 @@
 class Train
-  attr_accessor :speed
+  attr_accessor :speed, :current_station
   attr_reader :railway_carriage_count
 
   EXPECTED_TYPES = %w[freight passenger]
@@ -12,7 +12,6 @@ class Train
     @railway_carriage_count = railway_carriage_count
     @speed = 0
     @route = nil
-    @current_station = nil
   end
 
   def stop
