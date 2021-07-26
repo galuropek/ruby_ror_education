@@ -2,11 +2,11 @@ class Train
   attr_accessor :speed
   attr_reader :railway_carriage_count
 
-  EXPEXTED_TYPES = %w[freight passenger]
+  EXPECTED_TYPES = %w[freight passenger]
 
   def initialize(number, type, railway_carriage_count)
     @number = number
-    @type = EXPEXTED_TYPES.find { |e_type| e_type == type }
+    @type = EXPECTED_TYPES.find { |e_type| e_type == type }
     raise "Incorrect train type" unless @type
 
     @railway_carriage_count = railway_carriage_count
@@ -37,7 +37,6 @@ class Train
   end
 
   def move_to_prev_station
-    index_of_prev_station = current_station_index.pred
     @current_station = prev_station
   end
 
