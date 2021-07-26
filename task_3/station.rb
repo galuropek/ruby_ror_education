@@ -10,8 +10,8 @@ class Station
     @trains << train
   end
 
-  def train_departure
-    @trains.shift
+  def train_departure(train)
+    @trains.delete(train)
   end
 
   def show_trains_by_type(type)
