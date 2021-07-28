@@ -1,4 +1,5 @@
 class Route
+  attr_reader :intermediate_stations
 
   def initialize(starting_station, end_station)
     @starting_station = starting_station
@@ -14,11 +15,15 @@ class Route
     @intermediate_stations.delete(station)
   end
 
-  def full_route
+  def stations
     route = []
     route << @starting_station
     route.concat(@intermediate_stations)
     route << @end_station
     route
+  end
+
+  def to_s
+    self.stations.map { |station| station.name }.join(' -> ')
   end
 end

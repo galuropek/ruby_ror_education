@@ -1,58 +1,78 @@
 class Train
   attr_accessor :speed
-  attr_reader :railway_carriage_count, :current_station
+  attr_reader :wagons, :current_station, :route, :number, :type
 
-  EXPECTED_TYPES = %w[freight passenger]
-
-  def initialize(number, type, railway_carriage_count)
+  def initialize(number, type)
     @number = number
-    @type = EXPECTED_TYPES.find { |e_type| e_type == type }
-    raise "Incorrect train type" unless @type
-
-    @railway_carriage_count = railway_carriage_count
+    @type = type
+    @wagons = []
     @speed = 0
-    @route = nil
   end
 
   def stop
     self.speed = 0
   end
 
-  def add_railway_carriage
-    @railway_carriage_count += 1 if speed.zero?
+  def add_wagon(wagon)
+    the_same_type?(wagon) ? wagons << wagon : print_warn(wagon)
   end
 
-  def remove_railway_carriage
-    @railway_carriage_count -= 1 if speed.zero? && @railway_carriage_count.positive?
+  def remove_wagon(wagon)
+    wagons.delete(wagon)
   end
 
   def add_route(route)
-    @route = route
-    @current_station = route.full_route.first
+    self.route = route
+    self.current_station = route.stations.first
+    current_station.trains << self
   end
 
   def move_to_next_station
-    @current_station = next_station if next_station
+    if next_station
+      current_station.trains.delete(self)
+      self.current_station = next_station
+      current_station.trains << self
+    end
   end
 
   def move_to_prev_station
-    @current_station = prev_station if prev_station
+    if prev_station
+      current_station.trains.delete(self)
+      self.current_station = prev_station
+      current_station.trains << self
+    end
   end
 
   def next_station
-    @route.full_route[current_station_index.next]
+    route.stations[current_station_index.next]
   end
 
   def prev_station
-    index_of_prev_station = current_station_index.pred
-    return if index_of_prev_station.negative?
+    return if current_station_index.pred.negative?
 
-    @route.full_route[index_of_prev_station]
+    route.stations[current_station_index.pred]
   end
 
-  private
+  def to_s
+    "Поезд: номер - #{number}, тип - #{type}"
+  end
 
+  protected
+
+  # ожидается изменение этих переменных только внутри класса
+  attr_writer :wagons, :current_station, :route
+
+  # используется как вспомогательный метод только внутри класса
   def current_station_index
-    @route.full_route.index(@current_station)
+    route.stations.index(current_station)
+  end
+
+  # используется как вспомогательный метод только внутри класса
+  def the_same_type?(wagon)
+    type == wagon.type
+  end
+
+  def print_warn(wagon)
+    puts "#{wagon.to_s} не добавлен к #{self.to_s} - разные типы"
   end
 end
