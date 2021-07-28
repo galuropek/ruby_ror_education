@@ -1,5 +1,3 @@
-require 'colorize'
-
 class Menu
 
   def self.show_main_menu
