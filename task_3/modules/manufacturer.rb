@@ -1,12 +1,10 @@
 module Manufacturer
+  attr_reader :manufacturer
+
   def set_manufacturer(manufacturer)
     self.manufacturer = manufacturer
   end
 
-  def get_manufacturer
-    self.manufacturer
-  end
-
   protected
-  attr_accessor :manufacturer
+  attr_writer :manufacturer
 end

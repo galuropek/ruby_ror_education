@@ -1,10 +1,15 @@
+require_relative 'modules/instance_counter'
+
 class Route
+  include InstanceCounter
+
   attr_reader :intermediate_stations
 
   def initialize(starting_station, end_station)
     @starting_station = starting_station
     @end_station = end_station
     @intermediate_stations = []
+    register_instance
   end
 
   def add_station(station)

@@ -1,11 +1,17 @@
+require_relative 'modules/instance_counter'
+require_relative 'modules/manufacturer'
+
 class Train
+  include InstanceCounter
+  include Manufacturer
+
   attr_accessor :speed
   attr_reader :wagons, :current_station, :route, :number, :type
 
-  @@all_created_trains = []
+  @@instances = []
 
   def self.find(number)
-    @@all_created_trains.find { |train| train.number == number }
+    @@instances.find { |train| train.number == number }
   end
 
   def initialize(number, type)
@@ -13,7 +19,8 @@ class Train
     @type = type
     @wagons = []
     @speed = 0
-    @@all_created_trains << self
+    @@instances << self
+    register_instance
   end
 
   def stop
