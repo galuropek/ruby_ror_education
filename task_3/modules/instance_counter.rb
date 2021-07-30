@@ -1,5 +1,3 @@
-require 'pry'
-
 module InstanceCounter
   def self.included(base)
     class << base
