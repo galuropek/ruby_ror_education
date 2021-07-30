@@ -1,12 +1,17 @@
-require_relative 'modules/instance_counter'
-require_relative 'modules/manufacturer'
+require_relative '../modules/instance_counter'
+require_relative '../modules/manufacturer'
+require_relative '../modules/validation'
 
 class Train
   include InstanceCounter
   include Manufacturer
+  include Validation
 
   attr_accessor :speed
   attr_reader :wagons, :current_station, :route, :number, :type
+
+  NUMBER_PATTERN = /^[А-я\d]{3}\-*[А-я\d]{2}$/
+  EXPECTED_TYPES = [:cargo, :passenger]
 
   @@instances = []
 
@@ -21,6 +26,7 @@ class Train
     @speed = 0
     @@instances << self
     register_instance
+    validate!
   end
 
   def stop
@@ -75,6 +81,11 @@ class Train
 
   # ожидается изменение этих переменных только внутри класса
   attr_writer :wagons, :current_station, :route
+
+  def validate!
+    raise "Incorrect number pattern" unless number =~ NUMBER_PATTERN
+    raise "Unexpected type! Expected: #{EXPECTED_TYPES}" unless EXPECTED_TYPES.include?(type)
+  end
 
   # используется как вспомогательный метод только внутри класса
   def current_station_index

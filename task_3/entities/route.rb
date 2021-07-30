@@ -1,7 +1,9 @@
-require_relative 'modules/instance_counter'
+require_relative '../modules/instance_counter'
+require_relative '../modules/validation'
 
 class Route
   include InstanceCounter
+  include Validation
 
   attr_reader :intermediate_stations
 
@@ -10,6 +12,7 @@ class Route
     @end_station = end_station
     @intermediate_stations = []
     register_instance
+    validate!
   end
 
   def add_station(station)
@@ -30,5 +33,12 @@ class Route
 
   def to_s
     self.stations.map { |station| station.name }.join(' -> ')
+  end
+
+  protected
+
+  def validate!
+    raise "Incorrect starting_station!" unless @starting_station.valid?
+    raise "Incorrect end_station!" unless @end_station.valid?
   end
 end
