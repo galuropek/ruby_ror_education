@@ -7,7 +7,7 @@ class Station
 
 =begin
 О паттерне названия станции:
-минимум 3 символа (киррилица, цифры, дефис, пробел, точка)
+минимум 3 символа (кириллица, цифры, дефис, пробел, точка)
 ожидаемые примеры: "СП3", "Санкт-Петербург", "Нижний Новгород", "Н.Новгород"
 =end
   NAME_PATTERN = /^[А-я\d\s\-\.]{3,}$/
@@ -55,6 +55,6 @@ class Station
     raise "Found several hyphens in sequence and name length < 3 after clearing!" unless name.gsub(/-+/, '-').strip.length >= 3
     # проверка, чтобы название начиналось с буквы или цифры, а не доп символов из ркгулярки
     # сработает на: ".Париж", "-Париж", " Париж"
-    raise "Found incorrect chars in the beginning of name" unless name =~ /^[А-я]+/
+    raise "Found incorrect chars in the beginning of name" unless name =~ /^[А-я\d]+/
   end
 end
