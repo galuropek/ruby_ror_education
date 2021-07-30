@@ -7,13 +7,10 @@ class Station
 
 =begin
 О паттерне названия станции:
-минимум 3 символа (киррилица, цифры + знаки препинания + пробелы)
-примеры: "СП3", "Санкт-Петербург", "Нижний Новгород", "Н.Новгород"
-Из-за пробелов в регулярке нужно делать доп проверку:
-  name.gsub(/\s+/, ' ').strip.length >= 3
-gsub(/\s+/, ' ') - для удаления наскольких пробелов в середине строки
+минимум 3 символа (киррилица, цифры, дефис, пробел, точка)
+ожидаемые примеры: "СП3", "Санкт-Петербург", "Нижний Новгород", "Н.Новгород"
 =end
-  NAME_PATTERN = /^[ А-я\d[[:punct:]]]{3,}$/
+  NAME_PATTERN = /^[А-я\d\s\-\.]{3,}$/
 
   attr_reader :name, :trains
 
@@ -51,6 +48,13 @@ gsub(/\s+/, ' ') - для удаления наскольких пробелов
 
   def validate!
     raise "Incorrect name pattern: >= 3 Cyrillic symbols or Numbers!" unless name =~ NAME_PATTERN
+    # из-за доп символов в регулярке нужны проверки кейсов с их повторением и использованием в начале названия
+    # к примеру: "  А", "A  ", "..A", "A.." и т.д.
     raise "Found several spaces in sequence and name length < 3 after clearing!" unless name.gsub(/\s+/, ' ').strip.length >= 3
+    raise "Found several dots in sequence and name length < 3 after clearing!" unless name.gsub(/\.+/, '.').strip.length >= 3
+    raise "Found several hyphens in sequence and name length < 3 after clearing!" unless name.gsub(/-+/, '-').strip.length >= 3
+    # проверка, чтобы название начиналось с буквы или цифры, а не доп символов из ркгулярки
+    # сработает на: ".Париж", "-Париж", " Париж"
+    raise "Found incorrect chars in the beginning of name" unless name =~ /^[А-я]+/
   end
 end

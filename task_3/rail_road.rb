@@ -57,12 +57,16 @@ class RailRoad
   end
 
   def create_train_action
-    print "Введите номер поезда: "
-    train_number = gets.chomp
-    train_type = choose_item_from_the_list(TRAIN_TYPES, "тип поезда")
-    train = create_train(train_number, train_type)
-    return unless train
-
+    begin
+      print "Введите номер поезда: "
+      train_number = gets.chomp
+      train_type = choose_item_from_the_list(TRAIN_TYPES, "тип поезда")
+      train = create_train(train_number, train_type)
+    rescue RuntimeError => e
+      puts e.message
+      puts "Поезд НЕ создан! Попробуйте еще раз, но учтите сообщение выше."
+      retry
+    end
     trains << train
     puts "#{train.to_s} создан и добавлен в общий список."
     start_actions_with_trains
