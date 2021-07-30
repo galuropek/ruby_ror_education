@@ -6,5 +6,6 @@ module Manufacturer
   end
 
   protected
+  # ожидется изменение только через метод set_manufacturer
   attr_writer :manufacturer
 end
