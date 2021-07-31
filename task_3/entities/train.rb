@@ -83,8 +83,10 @@ class Train
   attr_writer :wagons, :current_station, :route
 
   def validate!
-    raise "Incorrect number pattern! Expected examples: \"12a-B3\" or \"123AB\"" unless number =~ NUMBER_PATTERN
-    raise "Unexpected type! Expected: #{EXPECTED_TYPES}" unless EXPECTED_TYPES.include?(type)
+    errors = []
+    errors << "Incorrect number pattern! Expected examples: \"12a-B3\" or \"123AB\"!" unless number =~ NUMBER_PATTERN
+    errors << "Unexpected type! Expected: #{EXPECTED_TYPES}!" unless EXPECTED_TYPES.include?(type)
+    raise errors.join(" ") unless errors.empty?
   end
 
   # используется как вспомогательный метод только внутри класса

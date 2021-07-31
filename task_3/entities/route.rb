@@ -38,7 +38,9 @@ class Route
   protected
 
   def validate!
-    raise "Incorrect starting_station!" unless @starting_station.valid?
-    raise "Incorrect end_station!" unless @end_station.valid?
+    errors = []
+    errors << "Incorrect starting_station!" unless @starting_station.valid?
+    errors << "Incorrect end_station!" unless @end_station.valid?
+    raise errors.join(" ") unless errors.empty?
   end
 end

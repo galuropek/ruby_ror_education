@@ -47,14 +47,16 @@ class Station
   protected
 
   def validate!
-    raise "Incorrect name pattern: >= 3 Cyrillic symbols or Numbers!" unless name =~ NAME_PATTERN
+    errors = []
+    errors << "Incorrect name pattern: >= 3 Cyrillic symbols or Numbers!" unless name =~ NAME_PATTERN
     # из-за доп символов в регулярке нужны проверки кейсов с их повторением и использованием в начале названия
     # к примеру: "  А", "A  ", "..A", "A.." и т.д.
-    raise "Found several spaces in sequence and name length < 3 after clearing!" unless name.gsub(/\s+/, ' ').strip.length >= 3
-    raise "Found several dots in sequence and name length < 3 after clearing!" unless name.gsub(/\.+/, '.').strip.length >= 3
-    raise "Found several hyphens in sequence and name length < 3 after clearing!" unless name.gsub(/-+/, '-').strip.length >= 3
+    errors << "Found several spaces in sequence and name length < 3 after clearing!" unless name.gsub(/\s+/, ' ').strip.length >= 3
+    errors << "Found several dots in sequence and name length < 3 after clearing!" unless name.gsub(/\.+/, '.').strip.length >= 3
+    errors << "Found several hyphens in sequence and name length < 3 after clearing!" unless name.gsub(/-+/, '-').strip.length >= 3
     # проверка, чтобы название начиналось с буквы или цифры, а не доп символов из ркгулярки
     # сработает на: ".Париж", "-Париж", " Париж"
-    raise "Found incorrect chars in the beginning of name" unless name =~ /^[А-я\d]+/
+    errors << "Found incorrect chars in the beginning of name!" unless name =~ /^[А-я\d]+/
+    raise errors.join(" ") unless errors.empty?
   end
 end
