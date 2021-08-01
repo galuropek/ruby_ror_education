@@ -7,8 +7,6 @@ require_relative 'entities/passenger_train'
 require_relative 'entities/cargo_wagon'
 require_relative 'entities/passenger_wagon'
 
-require 'pry'
-
 class RailRoad
   include Menu
 
@@ -394,7 +392,7 @@ class RailRoad
 
   def check_empty_stations_for_route
     while stations.count < 2
-      puts "Для создания маршрута нужно, чтобы было создано не меннее 2 станций! На данный момент в списке #{stations.count} станций!" if stations.empty?
+      puts "Для создания маршрута нужно, чтобы было создано не меннее 2 станций! На данный момент в списке #{stations.count} станций!"
       create_station_action
     end
   end
