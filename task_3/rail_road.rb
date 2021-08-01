@@ -35,10 +35,10 @@ class RailRoad
 
   # menu actions
 
-  def action_choice_processing(menu: @menu)
-    show_menu_items(menu: @menu)
+  def action_choice_processing
+    show_menu_items
     input_index = input_index_value
-    send menu[input_index][:method]
+    send @menu[input_index][:method]
   rescue NoMethodError => e
     puts e.message
     puts INCORRECT_INPUT_NUMBER_MSG
@@ -70,8 +70,8 @@ class RailRoad
     list.each_with_index { |item, index| puts "\t#{index.next}. #{item.to_s}" }
   end
 
-  def show_menu_items(menu: @menu)
-    menu.each_with_index { |item, index| puts MENU_MSG_PATTERN % [index, item[:action]] }
+  def show_menu_items
+    @menu.each_with_index { |item, index| puts MENU_MSG_PATTERN % [index, item[:action]] }
   end
 
   def set_next_menu(next_menu)
