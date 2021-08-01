@@ -1,83 +1,69 @@
-class Menu
+module Menu
 
-  def self.show_main_menu
-    puts %q`
-Введите 0, чтобы завершить программу.
-Введите 1, чтобы выполнить операции с поездами.
-Введите 2, чтобы выполнить операции c вагонами.
-Введите 3, чтобы выполнить операции cо станциями.
-Введите 4, чтобы выполнить операции c маршрутами.
-`
+  NOT_FOUND_MSG = "Не найдено %s в общем списке. Нужно создать новый(ую):"
+  MENU_MSG_PATTERN = "Введите %s, чтобы %s."
+  INCORRECT_INPUT_NUMBER_MSG = "Введен некоррекнтый номер! Нужно выбрать один из предложенных вариантов!"
+  ENTER_YOUR_CHOICE = "Введите ваш выбор: "
+  ADDED_TO_LIST = "%s добавлен(а) в общий список!"
+  EMPTY_LIST = "Не найдено созданных %s!"
+
+  def main_menu
+    [
+      { action: "завершить программу", method: :exit },
+      { action: "выполнить операции с поездами", method: :start_actions_with_trains },
+      { action: "выполнить операции с вагонами", method: :start_actions_with_wagons },
+      { action: "выполнить операции cо станциями", method: :start_actions_with_stantions },
+      { action: "выполнить операции c маршрутами", method: :start_actions_with_routes },
+    ]
   end
 
-  def self.show_train_menu
-    puts %q`
-Введите 0, чтобы вернуться назад.
-Введите 1, чтобы создать поезд.
-Введите 2, чтобы посмотреть список созданных поездов.
-Введите 3, чтобы прицепить поезду вагон.
-Введите 4, чтобы отцепить вагон от поезда.
-Введите 5, чтобы посмотреть текущую станцию поезда.
-Введите 6, чтобы отправить поезд на следующую станцию.
-Введите 7, чтобы отправить поезд на предыдущую станцию.
-Введите 8, чтобы назначить маршрут.
-Введите 9, чтобы посмотреть маршрут поезда.
-Введите 10, чтобы посмотреть список вагонов поезда.
-`
+  def train_actions_menu
+    [
+      { action: "создать поезд", method: :create_train_action },
+      { action: "посмотреть список созданных поездов", method: :show_trains_action },
+      { action: "прицепить поезду вагон", method: :add_wagon_to_train_action },
+      { action: "отцепить вагон от поезда", method: :remove_wagon_from_train_action },
+      { action: "посмотреть список вагонов поезда", method: :show_wagons_of_train_action },
+      { action: "посмотреть текущую станцию поезда", method: :show_current_train_station_action },
+      { action: "отправить поезд на следующую станцию", method: :move_train_to_next_station_action },
+      { action: "отправить поезд на предыдущую станцию", method: :move_train_to_prev_station_action },
+      { action: "назначить маршрут", method: :add_route_to_train_action },
+      { action: "посмотреть маршрут поезда", method: :show_route_of_train_action },
+    ].unshift(back_action)
   end
 
-  def self.add_wagon_to_train_menu
-    puts %q`
-Введите 0, чтобы вернуться назад.
-Введите 1, чтобы выбрать вагон из существующих.
-Введите 2, чтобы создать и добавить новый вагон.
-`
+  def wagon_menu
+    [
+      { action: "создать вагон", method: :create_wagon_action },
+      { action: "посмотреть список созданных вагонов", method: :show_wagons_action },
+    ].unshift(back_action)
   end
 
-  def self.add_route_to_train_menu
-    puts %q`
-Введите 0, чтобы вернуться назад.
-Введите 1, чтобы выбрать маршрут из существующих.
-Введите 2, чтобы создать и добавить новый маршрут.
-`
+  def station_menu
+    [
+      { action: "создать станцию", method: :create_station_action },
+      { action: "посмотреть список созданных станций", method: :show_station_action },
+      { action: "посмотреть список поездов на станций", method: :show_trains_of_station_action },
+    ].unshift(back_action)
   end
 
-  def self.show_wagon_menu
-    puts %q`
-Введите 0, чтобы вернуться назад.
-Введите 1, чтобы создать вагон.
-Введите 2, чтобы посмотреть список созданных вагонов.
-`
+  def route_menu
+    [
+      { action: "создать маршрут", method: :create_route_action },
+      { action: "посмотреть список созданных маршрутов", method: :show_routes_action },
+      { action: "добавить станцию в маршрут", method: :add_station_to_route_action },
+      { action: "удалить станцию из маршрута", method: :remove_station_from_route_action },
+    ].unshift(back_action)
   end
 
-  def self.show_station_menu
-    puts %q`
-Введите 0, чтобы вернуться назад.
-Введите 1, чтобы создать станцию.
-Введите 2, чтобы посмотреть список созданных станций.
-Введите 3, чтобы посмотреть список поездов на станций.
-`
+  def adding_menu(entity_name, entity_key)
+    [
+      { action: "выбрать #{entity_name} из существующих", method: "add_#{entity_key}_from_list".to_sym },
+      { action: "создать новый(ую) #{entity_name}", method: "create_and_add_#{entity_key}".to_sym },
+    ].unshift(back_action)
   end
 
-  def self.show_route_menu
-    puts %q`
-Введите 0, чтобы вернуться назад.
-Введите 1, чтобы создать маршрут.
-Введите 2, чтобы посмотреть список созданных маршрутов.
-Введите 3, чтобы добавить станцию в маршрут.
-Введите 4, чтобы удалить станцию из маршрута.
-`
-  end
-
-  def self.add_station_to_route_menu
-    puts %q`
-Введите 0, чтобы вернуться назад.
-Введите 1, чтобы выбрать станцию из существующих.
-Введите 2, чтобы создать и добавить новую станцию.
-`
-  end
-
-  def self.incorrect_input_number
-    puts 'Введен некоррекнтый номер. Выберите вариант из списка!'
+  def back_action
+    { action: "вернуться назад", method: :back }
   end
 end

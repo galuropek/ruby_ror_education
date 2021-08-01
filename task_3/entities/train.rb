@@ -74,7 +74,7 @@ class Train
   end
 
   def to_s
-    "Поезд: номер - #{number}, тип - #{type}"
+    "номер: #{number}, тип: #{type}"
   end
 
   protected
@@ -100,6 +100,6 @@ class Train
   end
 
   def print_warn(wagon)
-    puts "#{wagon.to_s} не добавлен к #{self.to_s} - разные типы"
+    puts "Вагон (#{wagon}) не добавлен к плезду (#{self.to_s}) - разные типы!"
   end
 end

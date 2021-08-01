@@ -15,7 +15,7 @@ class Wagon
   end
 
   def to_s
-    "Вагон: id - #{self.object_id}, тип - #{type}"
+    "id: #{self.object_id}, тип: #{type}"
   end
 
   protected
