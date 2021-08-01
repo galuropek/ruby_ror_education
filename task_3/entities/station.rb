@@ -40,6 +40,10 @@ class Station
     @trains.select { |train| train.type == type }
   end
 
+  def each_train(&block)
+    trains.each { |train| block.call(train) }
+  end
+
   def to_s
     name
   end
