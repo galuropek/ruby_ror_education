@@ -73,6 +73,10 @@ class Train
     route.stations[current_station_index.pred]
   end
 
+  def each_wagon(&block)
+    wagons.each { |wagon| block.call(wagon) }
+  end
+
   def to_s
     "номер: #{number}, тип: #{type}"
   end
