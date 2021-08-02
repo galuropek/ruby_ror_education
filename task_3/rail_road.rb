@@ -23,6 +23,7 @@ class RailRoad
     @prev_menu = nil
     @current_train = nil
     @current_route = nil
+    @current_wagon = nil
   end
 
   def run
@@ -236,40 +237,34 @@ class RailRoad
     wagons.any? ? show_all_items_from_list(wagons) : puts(EMPTY_LIST % "вагонов")
   end
 
-  def add_filling_action
-    set_next_menu(add_filling_menu)
+  def take_place_action
+    return create_wagon_after_empty_check if wagons.empty?
+
+    choose_wagon_from_list
+    type = @current_wagon.type
+    take_place(type) ? puts(TAKE_PLACE[type][:taken] % @current_wagon.free_place) : puts(TAKE_PLACE[type][:over] % [@current_wagon.taken_place, @current_wagon.place])
   end
 
-  def add_cargo
-    current_wagon = choose_wagon_from_list(:cargo)
-    return unless current_wagon
-
-    print "Введите объем добавляемого груза: "
-    if current_wagon.add_filling(gets.chomp.to_f)
-      puts "Оставшийся свободный объем в вагоне: #{current_wagon.free_filling}"
+  def take_place(type)
+    case type
+    when :passenger
+      @current_wagon.take_place
+    when :cargo
+      print "Введите объем добавляемого груза: "
+      @current_wagon.take_place(gets.chomp.to_f)
     else
-      puts "В вагоне не осталось свободного места или добавляемый груз превышает оставшееся свободное место " +
-               "#{current_wagon.occupied_filling}/#{current_wagon.overall_volume} (занято/всего)!"
+      raise "Incorrect wagon type!"
     end
   end
 
-  def add_passenger
-    current_wagon = choose_wagon_from_list(:passenger)
-    return unless current_wagon
-
-    if current_wagon.add_filling
-      puts "Было занято одно пассажирское место. Осталось свободных мест: #{current_wagon.free_filling}."
-    else
-      puts "Все места уже заняты #{current_wagon.occupied_filling}/#{current_wagon.number_of_seats} (занято/всего)!"
-    end
-  end
-
-  def choose_wagon_from_list(type)
+  def choose_wagon_from_list
     puts "Выберите вагон из списка:"
-    found_wagons_by_type = wagons.select { |wagon| wagon.type == type }
-    return puts "Не найдено вагонов с типом #{type}!" if found_wagons_by_type.empty?
+    @current_wagon = list_choice_processing(list: wagons )
+  end
 
-    list_choice_processing(list: found_wagons_by_type )
+  def create_wagon_after_empty_check
+    puts NOT_FOUND_MSG % "вагонов"
+    create_wagon_action
   end
 
   # station actions

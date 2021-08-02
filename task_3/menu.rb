@@ -11,6 +11,16 @@ module Menu
       cargo: "Введите объем грузового вагона: ",
       passenger: "Введите максимальное количество пассажиров в вагоне: "
   }
+  TAKE_PLACE = {
+      passenger: {
+          taken: "Было занято одно пассажирское место. Осталось свободных мест: %s.",
+          over: "Все места уже заняты %s/%s (занято/всего)!"
+      },
+      cargo: {
+          taken: "Груз добавлен. Оставшийся свободный объем в вагоне: %s.",
+          over: "В вагоне не осталось свободного места или добавляемый груз превышает оставшееся свободное место %s/%s (занято/всего)!"
+      }
+  }
 
   def main_menu
     [
@@ -41,7 +51,7 @@ module Menu
     [
       { action: "создать вагон", method: :create_wagon_action },
       { action: "посмотреть список созданных вагонов", method: :show_wagons_action },
-      { action: "занять место / добавить груз", method: :add_filling_action }
+      { action: "занять место / добавить груз", method: :take_place_action }
     ].unshift(back_action)
   end
 
@@ -62,12 +72,12 @@ module Menu
     ].unshift(back_action)
   end
 
-  def add_filling_menu
-    [
-      { action: "занять пассажирское место", method: :add_passenger },
-      { action: "добавить груз", method: :add_cargo }
-    ].unshift(back_action)
-  end
+  # def take_place_menu
+  #   [
+  #     { action: "занять пассажирское место", method: :add_passenger },
+  #     { action: "добавить груз", method: :add_cargo }
+  #   ].unshift(back_action)
+  # end
 
   def adding_menu(entity_name, entity_key)
     [

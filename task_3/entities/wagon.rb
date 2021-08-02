@@ -5,13 +5,24 @@ class Wagon
   include Manufacturer
   include Validation
 
-  attr_reader :type
+  attr_reader :type, :taken_place
+  attr_accessor :place
 
   EXPECTED_TYPES = [:cargo, :passenger]
 
-  def initialize(type)
+  def initialize(type, place)
     @type = type
+    @place = place
+    @taken_place = 0.0
     validate!
+  end
+
+  def free_place
+    place - taken_place
+  end
+
+  def take_place
+    raise "Not implemented!"
   end
 
   def to_s
@@ -21,6 +32,9 @@ class Wagon
   protected
 
   def validate!
-    raise "Unexpected type! Expected: #{EXPECTED_TYPES}" unless EXPECTED_TYPES.include?(type)
+    errors = []
+    errors << "Unexpected type! Expected: #{EXPECTED_TYPES}" unless EXPECTED_TYPES.include?(type)
+    errors << "Empty place!" if place.to_f.zero?
+    raise errors.join(" ") unless errors.empty?
   end
 end
