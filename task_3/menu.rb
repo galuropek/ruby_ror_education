@@ -6,6 +6,11 @@ module Menu
   ENTER_YOUR_CHOICE = "Введите ваш выбор: "
   ADDED_TO_LIST = "%s добавлен(а) в общий список!"
   EMPTY_LIST = "Не найдено созданных %s!"
+  ADD_FILLING = { cargo: :add_cargo, passenger: :add_passenger }
+  WAGON_EXTRA_ARG = {
+      cargo: "Введите объем грузового вагона: ",
+      passenger: "Введите максимальное количество пассажиров в вагоне: "
+  }
 
   def main_menu
     [
@@ -36,6 +41,7 @@ module Menu
     [
       { action: "создать вагон", method: :create_wagon_action },
       { action: "посмотреть список созданных вагонов", method: :show_wagons_action },
+      { action: "занять место / добавить груз", method: :add_filling_action }
     ].unshift(back_action)
   end
 
@@ -53,6 +59,13 @@ module Menu
       { action: "посмотреть список созданных маршрутов", method: :show_routes_action },
       { action: "добавить станцию в маршрут", method: :add_station_to_route_action },
       { action: "удалить станцию из маршрута", method: :remove_station_from_route_action },
+    ].unshift(back_action)
+  end
+
+  def add_filling_menu
+    [
+      { action: "занять пассажирское место", method: :add_passenger },
+      { action: "добавить груз", method: :add_cargo }
     ].unshift(back_action)
   end
 

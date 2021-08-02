@@ -10,15 +10,15 @@ class CargoWagon < Wagon
     @occupied_volume = 0.0
   end
 
-  def add_cargo(volume)
-    @occupied_volume += volume if (@occupied_volume + volume) < overall_volume
+  def add_filling(filling)
+    @occupied_volume += filling if (@occupied_volume + filling) < overall_volume
   end
 
-  def occupied_volume
+  def occupied_filling
     @occupied_volume
   end
 
-  def free_volume
+  def free_filling
     overall_volume - @occupied_volume
   end
 end

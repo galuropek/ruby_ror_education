@@ -10,15 +10,15 @@ class PassengerWagon < Wagon
     @occupied_seats = 0
   end
 
-  def take_seat
+  def add_filling
     @occupied_seats += 1 if @occupied_seats < number_of_seats
   end
 
-  def occupied_seats
+  def occupied_filling
     @occupied_seats
   end
 
-  def free_seats
+  def free_filling
     number_of_seats - @occupied_seats
   end
 end

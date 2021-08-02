@@ -148,8 +148,10 @@ class RailRoad
 
     choose_train_from_list
     if @current_train.wagons.any?
-      puts "У поезда (#{@current_train}) следующий список вагонов:"
-      show_all_items_from_list(@current_train.wagons)
+      @current_train.each_wagon do |wagon|
+        puts "#{wagon.object_id}, #{wagon.type}, " +
+                 "#{wagon.free_filling}, #{wagon.occupied_filling}"
+      end
     else
       puts "У поезда (#{@current_train}) нет вагонов."
     end
@@ -234,7 +236,43 @@ class RailRoad
     wagons.any? ? show_all_items_from_list(wagons) : puts(EMPTY_LIST % "вагонов")
   end
 
-  # stantion actions
+  def add_filling_action
+    set_next_menu(add_filling_menu)
+  end
+
+  def add_cargo
+    current_wagon = choose_wagon_from_list(:cargo)
+    return unless current_wagon
+
+    print "Введите объем добавляемого груза: "
+    if current_wagon.add_filling(gets.chomp.to_f)
+      puts "Оставшийся свободный объем в вагоне: #{current_wagon.free_filling}"
+    else
+      puts "В вагоне не осталось свободного места или добавляемый груз превышает оставшееся свободное место " +
+               "#{current_wagon.occupied_filling}/#{current_wagon.overall_volume} (занято/всего)!"
+    end
+  end
+
+  def add_passenger
+    current_wagon = choose_wagon_from_list(:passenger)
+    return unless current_wagon
+
+    if current_wagon.add_filling
+      puts "Было занято одно пассажирское место. Осталось свободных мест: #{current_wagon.free_filling}."
+    else
+      puts "Все места уже заняты #{current_wagon.occupied_filling}/#{current_wagon.number_of_seats} (занято/всего)!"
+    end
+  end
+
+  def choose_wagon_from_list(type)
+    puts "Выберите вагон из списка:"
+    found_wagons_by_type = wagons.select { |wagon| wagon.type == type }
+    return puts "Не найдено вагонов с типом #{type}!" if found_wagons_by_type.empty?
+
+    list_choice_processing(list: found_wagons_by_type )
+  end
+
+  # station actions
 
   def start_actions_with_stantions
     set_next_menu(station_menu)
@@ -258,8 +296,7 @@ class RailRoad
 
     station = list_choice_processing(list: stations)
     if station.trains.any?
-      puts "У станции (#{station}) следующие поезда в списке:"
-      show_all_items_from_list(station.trains)
+      station.each_train { |train| puts "#{train.number}, #{train.type}, #{train.wagons.count}" }
     else
       puts "У станции (#{station}) нет поездов в списке."
     end
@@ -357,22 +394,25 @@ class RailRoad
     train
   end
 
-  def create_wagon_instance(type)
+  def create_wagon_instance(type, extra_arg)
     case type
-    when :passenger; PassengerWagon.new(type)
-    when :cargo; CargoWagon.new(type)
+    when :passenger; PassengerWagon.new(type, extra_arg)
+    when :cargo; CargoWagon.new(type, extra_arg)
     else return puts "Вагон не создан, указан несуществующий тип!"
     end
   end
 
   def create_wagon_dialog
     puts "Введите тип вагона:"
-    list_choice_processing(list: TRAIN_TYPES)
+    type = list_choice_processing(list: TRAIN_TYPES)
+    print WAGON_EXTRA_ARG[type]
+    extra_arg = gets.chomp.to_f
+    [type, extra_arg]
   end
 
   def create_wagon
-    type = create_wagon_dialog
-    wagon = create_wagon_instance(type)
+    type, extra_arg = create_wagon_dialog
+    wagon = create_wagon_instance(type, extra_arg)
     puts ">>> Создан вагон (#{wagon})!"
     wagon
   end
