@@ -28,7 +28,6 @@ class Station
     @name = name
     @trains = []
     @@instances << self
-    @errors = []
     register_instance
     validate!
   end
@@ -56,15 +55,17 @@ class Station
   protected
 
   def validate!
-    @errors << ERRORS[:pattern] unless name =~ NAME_PATTERN
-    @errors << ERRORS[:beginning] unless name =~ /^[А-я\d]+/
-    raise @errors.join(' ') unless @errors.empty?
+    errors = []
+    errors << ERRORS[:pattern] unless name =~ NAME_PATTERN
+    errors << ERRORS[:beginning] unless name =~ /^[А-я\d]+/
+    validate_length_name(errors)
+    raise errors.join(' ') unless errors.empty?
   end
 
-  def validate_length_name
-    @errors << ERRORS[:spaces] unless length_is_correct?(/\s+/, ' ')
-    @errors << ERRORS[:dots] unless length_is_correct?(/\.+/, '.')
-    @errors << ERRORS[:hyphens] unless length_is_correct?(/-+/, '-')
+  def validate_length_name(errors)
+    errors << ERRORS[:spaces] unless length_is_correct?(/\s+/, ' ')
+    errors << ERRORS[:dots] unless length_is_correct?(/\.+/, '.')
+    errors << ERRORS[:hyphens] unless length_is_correct?(/-+/, '-')
   end
 
   def length_is_correct?(regexp, str, correct_value = 3)
