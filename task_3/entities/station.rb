@@ -1,11 +1,13 @@
 # frozen_string_literal: true
 
 require_relative '../modules/instance_counter'
+require_relative '../modules/accessors'
 require_relative '../modules/validation'
 
 class Station
   include InstanceCounter
   include Validation
+  extend Accessors
 
   NAME_PATTERN = /^[А-я\d\s\-.]{3,}$/.freeze
   ERRORS = {
@@ -16,7 +18,8 @@ class Station
     beginning: 'Found incorrect chars in the beginning of name!'
   }.freeze
 
-  attr_reader :name, :trains
+  attr_accessor_with_history :name
+  attr_reader :trains
 
   @@instances = []
 
