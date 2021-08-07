@@ -18,7 +18,8 @@ class Station
     beginning: 'Found incorrect chars in the beginning of name!'
   }.freeze
 
-  attr_accessor_with_history :name
+  # attr_accessor_with_history :name
+  strong_attr_accessor :name, String
   attr_reader :trains
 
   @@instances = []
@@ -32,7 +33,7 @@ class Station
     @trains = []
     @@instances << self
     register_instance
-    validate!
+    # validate!
   end
 
   def add_train(train)
@@ -55,23 +56,21 @@ class Station
     name
   end
 
-  protected
-
-  def validate!
-    errors = []
-    errors << ERRORS[:pattern] unless name =~ NAME_PATTERN
-    errors << ERRORS[:beginning] unless name =~ /^[А-я\d]+/
-    validate_length_name(errors)
-    raise errors.join(' ') unless errors.empty?
-  end
-
-  def validate_length_name(errors)
-    errors << ERRORS[:spaces] unless length_is_correct?(/\s+/, ' ')
-    errors << ERRORS[:dots] unless length_is_correct?(/\.+/, '.')
-    errors << ERRORS[:hyphens] unless length_is_correct?(/-+/, '-')
-  end
-
-  def length_is_correct?(regexp, str, correct_value = 3)
-    name.gsub(regexp, str).strip.length >= correct_value
-  end
+  # def validate!
+  #   errors = []
+  #   errors << ERRORS[:pattern] unless name =~ NAME_PATTERN
+  #   errors << ERRORS[:beginning] unless name =~ /^[А-я\d]+/
+  #   validate_length_name(errors)
+  #   raise errors.join(' ') unless errors.empty?
+  # end
+  #
+  # def validate_length_name(errors)
+  #   errors << ERRORS[:spaces] unless length_is_correct?(/\s+/, ' ')
+  #   errors << ERRORS[:dots] unless length_is_correct?(/\.+/, '.')
+  #   errors << ERRORS[:hyphens] unless length_is_correct?(/-+/, '-')
+  # end
+  #
+  # def length_is_correct?(regexp, str, correct_value = 3)
+  #   name.gsub(regexp, str).strip.length >= correct_value
+  # end
 end
