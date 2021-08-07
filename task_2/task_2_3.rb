@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 array = []
 num_a = 0
 num_b = 1

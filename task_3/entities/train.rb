@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative '../modules/instance_counter'
 require_relative '../modules/manufacturer'
 require_relative '../modules/validation'
@@ -10,8 +12,8 @@ class Train
   attr_accessor :speed
   attr_reader :wagons, :current_station, :route, :number, :type
 
-  NUMBER_PATTERN = /^[А-я\w]{3}\-*[А-я\w]{2}$/
-  EXPECTED_TYPES = [:cargo, :passenger]
+  NUMBER_PATTERN = /^[А-я\w]{3}-*[А-я\w]{2}$/.freeze
+  EXPECTED_TYPES = %i[cargo passenger].freeze
 
   @@instances = []
 
@@ -48,19 +50,19 @@ class Train
   end
 
   def move_to_next_station
-    if next_station
-      current_station.trains.delete(self)
-      self.current_station = next_station
-      current_station.trains << self
-    end
+    return unless next_station
+
+    current_station.trains.delete(self)
+    self.current_station = next_station
+    current_station.trains << self
   end
 
   def move_to_prev_station
-    if prev_station
-      current_station.trains.delete(self)
-      self.current_station = prev_station
-      current_station.trains << self
-    end
+    return unless prev_station
+
+    current_station.trains.delete(self)
+    self.current_station = prev_station
+    current_station.trains << self
   end
 
   def next_station
@@ -83,27 +85,24 @@ class Train
 
   protected
 
-  # ожидается изменение этих переменных только внутри класса
   attr_writer :wagons, :current_station, :route
 
   def validate!
     errors = []
-    errors << "Incorrect number pattern! Expected examples: \"12a-B3\" or \"123AB\"!" unless number =~ NUMBER_PATTERN
+    errors << 'Incorrect number pattern! Expected examples: "12a-B3" or "123AB"!' unless number =~ NUMBER_PATTERN
     errors << "Unexpected type! Expected: #{EXPECTED_TYPES}!" unless EXPECTED_TYPES.include?(type)
-    raise errors.join(" ") unless errors.empty?
+    raise errors.join(' ') unless errors.empty?
   end
 
-  # используется как вспомогательный метод только внутри класса
   def current_station_index
     route.stations.index(current_station)
   end
 
-  # используется как вспомогательный метод только внутри класса
   def the_same_type?(wagon)
     type == wagon.type
   end
 
   def print_warn(wagon)
-    puts "Вагон (#{wagon}) не добавлен к плезду (#{self.to_s}) - разные типы!"
+    puts "Вагон (#{wagon}) не добавлен к плезду (#{self}) - разные типы!"
   end
 end

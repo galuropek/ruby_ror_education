@@ -1,13 +1,15 @@
+# frozen_string_literal: true
+
 require 'date'
 
-puts "Введите день месяца: "
+puts 'Введите день месяца: '
 day = gets.chomp.to_i
-puts "Введите порядковый номер месяца: "
+puts 'Введите порядковый номер месяца: '
 month = gets.chomp.to_i
-puts "Введите год: "
+puts 'Введите год: '
 year = gets.chomp.to_i
 
-high_year = (year % 400 == 0) || (year % 4 == 0 && year % 100 != 0)
+high_year = (year % 400).zero? || ((year % 4).zero? && year % 100 != 0)
 
 months = {
   1 => 31,
@@ -26,7 +28,7 @@ months = {
 
 result = day
 
-for i in 1..month.pred do
+(1..month.pred).each do |i|
   result += months[i]
 end
 

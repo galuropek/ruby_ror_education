@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative '../modules/manufacturer'
 require_relative '../modules/validation'
 
@@ -8,7 +10,7 @@ class Wagon
   attr_reader :type, :taken_place
   attr_accessor :place
 
-  EXPECTED_TYPES = [:cargo, :passenger]
+  EXPECTED_TYPES = %i[cargo passenger].freeze
 
   def initialize(type, place)
     @type = type
@@ -22,11 +24,11 @@ class Wagon
   end
 
   def take_place
-    raise "Not implemented!"
+    raise 'Not implemented!'
   end
 
   def to_s
-    "id: #{self.object_id}, тип: #{type}"
+    "id: #{object_id}, тип: #{type}"
   end
 
   protected
@@ -34,7 +36,7 @@ class Wagon
   def validate!
     errors = []
     errors << "Unexpected type! Expected: #{EXPECTED_TYPES}" unless EXPECTED_TYPES.include?(type)
-    errors << "Empty place!" if place.to_f.zero?
-    raise errors.join(" ") unless errors.empty?
+    errors << 'Empty place!' if place.to_f.zero?
+    raise errors.join(' ') unless errors.empty?
   end
 end

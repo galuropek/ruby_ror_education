@@ -1,13 +1,15 @@
-basket = Hash.new
+# frozen_string_literal: true
+
+basket = {}
 
 loop do
-  puts "Введите название товара: "
+  puts 'Введите название товара: '
   name = gets.chomp
-  break if name == "стоп"
+  break if name == 'стоп'
 
-  puts "Введите цену товара за единицу: "
+  puts 'Введите цену товара за единицу: '
   price = gets.to_f
-  puts "Введите количество: "
+  puts 'Введите количество: '
   quantity = gets.to_f
 
   basket[name] = {

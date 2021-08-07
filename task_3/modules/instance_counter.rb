@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module InstanceCounter
   def self.included(base)
     class << base
@@ -16,9 +18,8 @@ module InstanceCounter
   end
 
   module InstanceMethods
-
     protected
-    # ожидается вызод метода только внутри класса
+
     def register_instance
       self.class.all_instances ||= 0
       self.class.all_instances += 1

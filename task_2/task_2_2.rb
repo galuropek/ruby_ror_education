@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 array = []
 value = 10
 

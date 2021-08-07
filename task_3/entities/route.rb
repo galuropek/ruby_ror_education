@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative '../modules/instance_counter'
 require_relative '../modules/validation'
 
@@ -32,15 +34,15 @@ class Route
   end
 
   def to_s
-    self.stations.map { |station| station.name }.join(' -> ')
+    stations.map(&:name).join(' -> ')
   end
 
   protected
 
   def validate!
     errors = []
-    errors << "Incorrect starting_station!" unless @starting_station.valid?
-    errors << "Incorrect end_station!" unless @end_station.valid?
-    raise errors.join(" ") unless errors.empty?
+    errors << 'Incorrect starting_station!' unless @starting_station.valid?
+    errors << 'Incorrect end_station!' unless @end_station.valid?
+    raise errors.join(' ') unless errors.empty?
   end
 end
