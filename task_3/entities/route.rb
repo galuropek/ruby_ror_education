@@ -3,6 +3,8 @@
 require_relative '../modules/instance_counter'
 require_relative '../modules/validation'
 
+require_relative 'station'
+
 class Route
   include InstanceCounter
   include Validation
