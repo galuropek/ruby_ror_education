@@ -12,7 +12,12 @@ class Train
   attr_accessor :speed
   attr_reader :wagons, :current_station, :route, :number, :type
 
-  NUMBER_PATTERN = /^[А-я\w]{3}-*[А-я\w]{2}$/.freeze
+  validate :number, :presence
+  validate :number, :format, /^[А-я\w]{3}-*[А-я\w]{2}$/
+  validate :number, :type, String
+  validate :type, :presence
+  validate :type, :type, Symbol
+
   EXPECTED_TYPES = %i[cargo passenger].freeze
 
   @@instances = []
@@ -86,13 +91,6 @@ class Train
   protected
 
   attr_writer :wagons, :current_station, :route
-
-  def validate!
-    errors = []
-    errors << 'Incorrect number pattern! Expected examples: "12a-B3" or "123AB"!' unless number =~ NUMBER_PATTERN
-    errors << "Unexpected type! Expected: #{EXPECTED_TYPES}!" unless EXPECTED_TYPES.include?(type)
-    raise errors.join(' ') unless errors.empty?
-  end
 
   def current_station_index
     route.stations.index(current_station)

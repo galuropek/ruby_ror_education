@@ -10,6 +10,11 @@ class Wagon
   attr_reader :type, :taken_place
   attr_accessor :place
 
+  validate :type, :presence
+  validate :type, :type, Symbol
+  validate :place, :presence
+  validate :place, :type, Numeric
+
   EXPECTED_TYPES = %i[cargo passenger].freeze
 
   def initialize(type, place)
@@ -29,14 +34,5 @@ class Wagon
 
   def to_s
     "id: #{object_id}, тип: #{type}"
-  end
-
-  protected
-
-  def validate!
-    errors = []
-    errors << "Unexpected type! Expected: #{EXPECTED_TYPES}" unless EXPECTED_TYPES.include?(type)
-    errors << 'Empty place!' if place.to_f.zero?
-    raise errors.join(' ') unless errors.empty?
   end
 end

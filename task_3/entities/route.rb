@@ -7,7 +7,12 @@ class Route
   include InstanceCounter
   include Validation
 
-  attr_reader :intermediate_stations
+  attr_reader :starting_station, :intermediate_stations, :end_station
+
+  validate :starting_station, :presence
+  validate :starting_station, :type, Station
+  validate :end_station, :presence
+  validate :end_station, :type, Station
 
   def initialize(starting_station, end_station)
     @starting_station = starting_station
@@ -35,14 +40,5 @@ class Route
 
   def to_s
     stations.map(&:name).join(' -> ')
-  end
-
-  protected
-
-  def validate!
-    errors = []
-    errors << 'Incorrect starting_station!' unless @starting_station.valid?
-    errors << 'Incorrect end_station!' unless @end_station.valid?
-    raise errors.join(' ') unless errors.empty?
   end
 end

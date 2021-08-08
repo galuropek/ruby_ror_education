@@ -1,13 +1,20 @@
 # frozen_string_literal: true
 
 require_relative '../modules/instance_counter'
-require_relative '../modules/accessors'
 require_relative '../modules/validation'
+require_relative '../modules/accessors'
 
 class Station
   include InstanceCounter
   include Validation
   extend Accessors
+
+  attr_accessor_with_history :name
+  attr_reader :trains
+
+  validate :name, :presence
+  validate :name, :format, /\w{3,}/
+  validate :name, :type, String
 
   NAME_PATTERN = /^[А-я\d\s\-.]{3,}$/.freeze
   ERRORS = {
@@ -17,10 +24,6 @@ class Station
     hyphens: 'Found several hyphens in sequence and name length < 3 after clearing!',
     beginning: 'Found incorrect chars in the beginning of name!'
   }.freeze
-
-  # attr_accessor_with_history :name
-  strong_attr_accessor :name, String
-  attr_reader :trains
 
   @@instances = []
 
@@ -33,7 +36,7 @@ class Station
     @trains = []
     @@instances << self
     register_instance
-    # validate!
+    validate!
   end
 
   def add_train(train)
@@ -55,22 +58,4 @@ class Station
   def to_s
     name
   end
-
-  # def validate!
-  #   errors = []
-  #   errors << ERRORS[:pattern] unless name =~ NAME_PATTERN
-  #   errors << ERRORS[:beginning] unless name =~ /^[А-я\d]+/
-  #   validate_length_name(errors)
-  #   raise errors.join(' ') unless errors.empty?
-  # end
-  #
-  # def validate_length_name(errors)
-  #   errors << ERRORS[:spaces] unless length_is_correct?(/\s+/, ' ')
-  #   errors << ERRORS[:dots] unless length_is_correct?(/\.+/, '.')
-  #   errors << ERRORS[:hyphens] unless length_is_correct?(/-+/, '-')
-  # end
-  #
-  # def length_is_correct?(regexp, str, correct_value = 3)
-  #   name.gsub(regexp, str).strip.length >= correct_value
-  # end
 end
