@@ -2,19 +2,21 @@
 
 require_relative '../modules/instance_counter'
 require_relative '../modules/validation'
+require_relative '../modules/accessors'
 
 require_relative 'station'
 
 class Route
   include InstanceCounter
   include Validation
+  include Accessors
 
-  attr_reader :starting_station, :intermediate_stations, :end_station
+  strong_attr_accessor :starting_station,  Station
+  strong_attr_accessor :end_station, Station
+  attr_reader :intermediate_stations
 
   validate :starting_station, :presence
-  validate :starting_station, :type, Station
   validate :end_station, :presence
-  validate :end_station, :type, Station
 
   def initialize(starting_station, end_station)
     @starting_station = starting_station
