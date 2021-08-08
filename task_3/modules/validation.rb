@@ -2,9 +2,9 @@
 
 module Validation
   ERRORS = {
-      blank: '%s is nil or empty!',
-      format: '%s does not match the pattern!',
-      type: '%s - incorrect class type!'
+    blank: '%s is nil or empty!',
+    format: '%s does not match the pattern!',
+    type: '%s - incorrect class type!'
   }.freeze
 
   def self.included(base)
@@ -15,7 +15,7 @@ module Validation
   module ClassMethods
     def validate(name, type, param = nil)
       @validations ||= []
-      @validations << {name: name, type: type, param: param}
+      @validations << { name: name, type: type, param: param }
     end
   end
 
@@ -31,12 +31,20 @@ module Validation
     protected
 
     def validate!
-      errors =
-          self.class.instance_variable_get('@validations'.to_sym).each_with_object([]) do |opts, errors|
-            value = instance_variable_get("@#{opts[:name]}".to_sym)
-            errors << send("#{opts[:type]}_validate".to_sym, opts.merge(value: value))
-          end.compact
+      validations_class = child? ? self.class.superclass : self.class
+      errors = extract_validations(validations_class.instance_variable_get('@validations'.to_sym))
       raise errors.join("\n") unless errors.empty?
+    end
+
+    def extract_validations(validations)
+      validations.each_with_object([]) do |opts, errors|
+        value = instance_variable_get("@#{opts[:name]}".to_sym)
+        errors << send("#{opts[:type]}_validate".to_sym, opts.merge(value: value))
+      end.compact
+    end
+
+    def child?
+      self.class.superclass != Object
     end
   end
 
